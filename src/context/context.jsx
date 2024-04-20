@@ -1,17 +1,39 @@
 import { createContext, useState } from "react";
 import runChat from "../config/gemini"
 
-export const Context= createContext();
+export const Context = createContext();
 
-const ContextProvider = (props) =>{
+const ContextProvider = (props) => {
 
-    const onSent = async(prompt) =>{
+    const delayPara = (index, nextWord) => {
+        setTimeout(function () {
+            setResultData(prev=>prev+nextWord);
+        }, 75*index)
+    }// for typing effect
+
+    const onSent = async (prompt) => {
         setResultData("")//reset prev data
         setLoading(true)//loading animation
         setShowResult(true)//so that result can be shown
         setRecentPrompt(input)//so question can be seen
         const response = await runChat(input)//store response
-        setResultData(response)//make response the result
+        let responseArray = response.split("**");
+        let newResponse;
+        for(let i=0; i< responseArray.length; i++)
+        {
+            if (i === 0 || i%2 !== 1){
+                newResponse +=responseArray[i];
+            }
+            else{
+                newResponse +="<b>"+responseArray[i]+"</b>"; // to make bold words enclose in ** bold
+            }
+        }
+        let newResponse2= newResponse.split("*").join("</br>");
+        let newResponseArray = newResponse2.split(" ");
+        for(let i=0; i<newResponseArray.length; i++){
+            const nextWord = newResponseArray[i];
+            delayPara(i, nextWord+" ");
+        }
         setLoading(false)//stop loading animation
         setInput("")//make input field empty
     }
@@ -33,10 +55,10 @@ const ContextProvider = (props) =>{
         showResult,
         loading,
         resultData,
-        input, 
+        input,
         setInput
     } // can be used anywhere throughtout the project
-    return(
+    return (
         <Context.Provider value={contextValue}>
             {props.children}
         </Context.Provider>
