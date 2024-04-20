@@ -12,6 +12,7 @@ import bulb_icon from './bulb.png'
 import send_icon from  './send.png'
 import mic_icon from './mic.png'
 import gallery_icon from'./gallery.png'
+import gemini_icon from './gemini.png'
 
 export const assets = {
     menu_icon,
@@ -28,4 +29,5 @@ export const assets = {
     send_icon,
     mic_icon,
     gallery_icon,
+    gemini_icon
 }
