@@ -66,7 +66,8 @@ const Main = () => {
             <div>
               <img src={assets.gallery_icon} />
               <img src={assets.mic_icon} />
-              <img onClick={() => onSent()} src={assets.send_icon} />
+              {input?<img onClick={() => onSent()} src={assets.send_icon} />
+              :null}
             </div>
           </div>
           <p className="bottom-info">Gemini may display inaccurate info, including about people, so double-check its responses. Your privacy and Gemini Apps</p>
