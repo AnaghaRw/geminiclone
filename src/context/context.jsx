@@ -11,14 +11,28 @@ const ContextProvider = (props) => {
         }, 75*index)
     }// for typing effect
 
+    const newChat = () => {
+        setLoading(false)
+        setShowResult(false)
+    }
+
     const onSent = async (prompt) => {
         setResultData("")//reset prev data
         setLoading(true)//loading animation
+        setInput("")//make input field empty
         setShowResult(true)//so that result can be shown
-        setRecentPrompt(input)//so question can be seen
-        const response = await runChat(input)//store response
+        let response;
+        if(prompt !== undefined){// if thereis a prompt from prev that will be loaded
+            response = await runChat(prompt)//store response
+            setRecentPrompt(prompt)//so question can be seen
+        }
+        else{
+            response = await runChat(input)//store response
+            setRecentPrompt(input)//so question can be seen
+            setPrevPrompts(prev=>[...prev, input])//to store the prompts to show in sidebar
+        }
         let responseArray = response.split("**");
-        let newResponse;
+        let newResponse="";
         for(let i=0; i< responseArray.length; i++)
         {
             if (i === 0 || i%2 !== 1){
@@ -35,7 +49,7 @@ const ContextProvider = (props) => {
             delayPara(i, nextWord+" ");
         }
         setLoading(false)//stop loading animation
-        setInput("")//make input field empty
+        
     }
 
     const [input, setInput] = useState("");
@@ -56,7 +70,8 @@ const ContextProvider = (props) => {
         loading,
         resultData,
         input,
-        setInput
+        setInput,
+        newChat
     } // can be used anywhere throughtout the project
     return (
         <Context.Provider value={contextValue}>
